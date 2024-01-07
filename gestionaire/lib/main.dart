@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestionaire/routes.dart';
+import 'package:gestionaire/screens/auth/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.grey[200],
       ),
-      home: const Routes(),
+      home: const Login(),
     );
   }
 }
