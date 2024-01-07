@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gestionaire/routes.dart';
+import 'package:gestionaire/screens/auth/registre.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyFieldForms extends StatefulWidget {
@@ -10,23 +12,23 @@ class MyFieldForms extends StatefulWidget {
 }
 
 class _MyFieldFormsState extends State<MyFieldForms> {
+  final GlobalKey _formKey = GlobalKey<FormState>();
+
+  final _number = TextEditingController();
+  final _password = TextEditingController();
+
+  bool _isVisible = true;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        // height: MediaQuery.of(context).size.height * 0.78,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
           child: Column(children: [
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 20),
-            //   child: Text('Welcome Back',
-            //       style: GoogleFonts.roboto(
-            //           fontSize: 25, fontWeight: FontWeight.w500)),
-            // ),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(20),
@@ -41,6 +43,7 @@ class _MyFieldFormsState extends State<MyFieldForms> {
               height: 80,
               child: TextFormField(
                 keyboardType: TextInputType.phone,
+                controller: _number,
                 decoration: InputDecoration(
                   fillColor: const Color.fromARGB(255, 210, 198, 212),
                   filled: true,
@@ -59,46 +62,64 @@ class _MyFieldFormsState extends State<MyFieldForms> {
               ),
             ),
             const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(10),
-              height: 80,
-              child: Stack(
-                children: [
-                  TextFormField(
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      fillColor: const Color.fromARGB(255, 210, 198, 212),
-                      filled: true,
-                      hintText: "Votre mot de passe",
-                      hintStyle: GoogleFonts.roboto(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none),
-                      prefixIcon: const Icon(CupertinoIcons.lock,
-                          color: Colors.white, size: 28),
+            Form(
+              key: _formKey,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                height: 80,
+                child: Stack(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: _password,
+                      obscureText: _isVisible,
+                      decoration: InputDecoration(
+                          fillColor: const Color.fromARGB(255, 210, 198, 212),
+                          filled: true,
+                          hintText: "Votre mot de passe",
+                          hintStyle: GoogleFonts.roboto(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon: const Icon(CupertinoIcons.lock,
+                              color: Colors.white, size: 28),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isVisible = !_isVisible;
+                                });
+                              },
+                              icon: Icon(
+                                  _isVisible
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  size: 28,
+                                  color: const Color.fromARGB(255, 117, 6, 161)))),
                     ),
-                  ),
-                  const Positioned(
-                      top: 15,
-                      right: 20,
-                      child:
-                          Icon(Icons.visibility, size: 28, color: Color.fromARGB(255, 45, 3, 61)))
-                ],
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height:5),
-            TextButton(onPressed: (){}, child: Text("Mot de passe oublier", style:GoogleFonts.roboto(fontSize: 18))),
+            const SizedBox(height: 5),
+            TextButton(
+                onPressed: () {},
+                child: Text("Mot de passe oublier",
+                    style: GoogleFonts.roboto(fontSize: 18))),
             Container(
               padding: const EdgeInsets.all(10),
               width: 400,
               height: 70,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Routes()));
+                  },
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(10),
                       backgroundColor: Colors.purple[400]),
@@ -110,7 +131,10 @@ class _MyFieldFormsState extends State<MyFieldForms> {
             ),
             const SizedBox(height: 10),
             Text("Ou",
-                style: GoogleFonts.aBeeZee(fontSize: 18, color: Colors.purple, fontWeight: FontWeight.bold)),
+                style: GoogleFonts.aBeeZee(
+                    fontSize: 18,
+                    color: Colors.purple,
+                    fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(10),
@@ -121,7 +145,8 @@ class _MyFieldFormsState extends State<MyFieldForms> {
               width: 400,
               child: Row(
                 children: [
-                  Image.asset('assets/images/google.png', width: 35, height: 35),
+                  Image.asset('assets/images/google.png',
+                      width: 35, height: 35),
                   const SizedBox(width: 15),
                   Text("Continuer avec Google",
                       style: GoogleFonts.roboto(
@@ -160,7 +185,11 @@ class _MyFieldFormsState extends State<MyFieldForms> {
               Text("Vous n'avez pas de compte ? -",
                   style: GoogleFonts.roboto(fontSize: 18)),
               TextButton(
-                  onPressed: () {},
+                     onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => const RegistreWidget()
+                      ));
+                  },
                   child: Text(
                     "Créer",
                     style: GoogleFonts.roboto(

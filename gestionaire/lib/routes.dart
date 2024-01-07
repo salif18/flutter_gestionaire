@@ -29,37 +29,37 @@ class _RoutesState extends State<Routes> {
       ][_currentIndex],
       bottomNavigationBar: CurvedNavigationBar(
         index: _currentIndex,
-        height: 60.0,
+        height: 70.0,
         items: const [
           Icon(
             CupertinoIcons.chart_bar_alt_fill,
-            size: 30,
+            size: 33,
             color: Colors.white,
           ),
           Icon(
             Icons.stroller_rounded,
-            size: 30,
+            size: 33,
             color: Colors.white,
           ),
           Icon(
-            CupertinoIcons.money_dollar,
-            size: 30,
+            CupertinoIcons.cart_badge_plus,
+            size: 33,
             color: Colors.white,
           ),
           Icon(
-            CupertinoIcons.rectangle_paperclip,
-            size: 30,
+            Icons.description_outlined,
+            size: 33,
             color: Colors.white,
           ),
           Icon(
-            Icons.calculate_outlined,
-            size: 30,
+            CupertinoIcons.keyboard_chevron_compact_down,
+            size: 33,
             color: Colors.white,
           ),
         ],
         color: const Color.fromARGB(255, 117, 36, 141),
-        buttonBackgroundColor: Color.fromARGB(255, 126, 61, 248),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        buttonBackgroundColor: const Color.fromARGB(255, 126, 61, 248),
+        backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 600),
         onTap: (index) {

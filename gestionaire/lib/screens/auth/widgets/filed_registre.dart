@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gestionaire/routes.dart';
+import 'package:gestionaire/screens/auth/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FieldFormRegistre extends StatefulWidget {
@@ -10,6 +12,15 @@ class FieldFormRegistre extends StatefulWidget {
 }
 
 class _FieldFormRegistreState extends State<FieldFormRegistre> {
+
+  final GlobalKey _formKey = GlobalKey<FormState>();
+
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _number = TextEditingController();
+  final _password = TextEditingController();
+
+  bool _isVisible = true;
   @override
   Widget build(BuildContext context) {
     return  SingleChildScrollView(
@@ -35,25 +46,29 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
                       fontSize: 17, fontWeight: FontWeight.w500)),
             ),
             const SizedBox(height: 5),
-            Container(
-              padding: const EdgeInsets.all(10),
-              height: 80,
-              child: TextFormField(
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  fillColor: const Color.fromARGB(255, 210, 198, 212),
-                  filled: true,
-                  hintText: "Votre pseudo",
-                  hintStyle: GoogleFonts.roboto(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+            Form(
+              key: _formKey,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                height: 80,
+                child: TextFormField(
+                  keyboardType: TextInputType.name,
+                  controller: _name,
+                  decoration: InputDecoration(
+                    fillColor: const Color.fromARGB(255, 210, 198, 212),
+                    filled: true,
+                    hintText: "Votre pseudo",
+                    hintStyle: GoogleFonts.roboto(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none),
+                    prefixIcon: const Icon(CupertinoIcons.person,
+                        color: Colors.white, size: 28),
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none),
-                  prefixIcon: const Icon(CupertinoIcons.person,
-                      color: Colors.white, size: 28),
                 ),
               ),
             ),
@@ -63,6 +78,7 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
               height: 80,
               child: TextFormField(
                 keyboardType: TextInputType.phone,
+                controller: _number,
                 decoration: InputDecoration(
                   fillColor: const Color.fromARGB(255, 210, 198, 212),
                   filled: true,
@@ -86,6 +102,7 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
               height: 80,
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
+                controller: _email,
                 decoration: InputDecoration(
                   fillColor: const Color.fromARGB(255, 210, 198, 212),
                   filled: true,
@@ -111,7 +128,8 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
                 children: [
                   TextFormField(
                     keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
+                    controller: _password,
+                    obscureText: _isVisible,
                     decoration: InputDecoration(
                       fillColor: const Color.fromARGB(255, 210, 198, 212),
                       filled: true,
@@ -126,13 +144,22 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
                           borderSide: BorderSide.none),
                       prefixIcon: const Icon(CupertinoIcons.lock,
                           color: Colors.white, size: 28),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isVisible = !_isVisible;
+                                });
+                              },
+                              icon: Icon(
+                                  _isVisible
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  size: 28,
+                                  color: const Color.fromARGB(255, 117, 6, 161))),
                     ),
+                    
                   ),
-                  const Positioned(
-                      top: 15,
-                      right: 20,
-                      child:
-                          Icon(Icons.visibility, size: 28, color: Colors.purple))
+                 
                 ],
               ),
             ),
@@ -142,11 +169,14 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
               width: 400,
               height: 70,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context)=>const Routes()));
+                  },
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(10),
                       backgroundColor: Colors.purple[400]),
-                  child: Text("Se connecter",
+                  child: Text("S'inscrire",
                       style: GoogleFonts.roboto(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -201,12 +231,16 @@ class _FieldFormRegistreState extends State<FieldFormRegistre> {
             ),
             const SizedBox(height: 5),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text("Vous n'avez pas de compte ? -",
+              Text("Vous avez un compte ? -",
                   style: GoogleFonts.roboto(fontSize: 18)),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => const Login()
+                      ));
+                  },
                   child: Text(
-                    "Créer",
+                    "Login",
                     style: GoogleFonts.roboto(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

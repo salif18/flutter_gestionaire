@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor:const Color.fromARGB(255, 117, 36, 141),
       key: _keydrawer,
-      appBar: HomeAppBar(Keydrawer:_keydrawer),
+      appBar: HomeAppBar(keydrawer:_keydrawer),
       drawer: const MyDrawer(),
       body: const SafeArea(
         child: SingleChildScrollView(
