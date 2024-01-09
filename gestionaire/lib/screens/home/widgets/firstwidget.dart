@@ -49,7 +49,7 @@ class CountAndAchatWidget extends StatelessWidget {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text("Achat global",
+                  Text("Achats",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,

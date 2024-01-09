@@ -11,11 +11,11 @@ class MyPieChart extends StatelessWidget {
       color: Colors.white,
       child: PieChart(
         PieChartData(
-         centerSpaceRadius: 70,
-          centerSpaceColor: Color.fromARGB(255, 117, 0, 0),
+         centerSpaceRadius: 50,
+          centerSpaceColor: Color.fromARGB(255, 221, 221, 221),
           sections: [
             PieChartSectionData(
-              value: 20,
+              value: 25,
               title: "Ventes",
               titleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
               showTitle: true,
@@ -31,7 +31,7 @@ class MyPieChart extends StatelessWidget {
               color: Colors.amber,
             ),
             PieChartSectionData(
-              value: 15,
+              value: 55,
               title: "Benefices",
               titleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
               showTitle: true,

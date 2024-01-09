@@ -23,7 +23,7 @@ class VenteGlobalAndBenefice extends StatelessWidget {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text("Vente global",
+                  Text("Ventes",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -50,7 +50,7 @@ class VenteGlobalAndBenefice extends StatelessWidget {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text("Benefice global",
+                  Text("Benefice ",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,

@@ -7,8 +7,8 @@ class MyChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 300,
+      width: 120,
+      height: 250,
       padding: const EdgeInsets.only(right: 30, top: 20),
       decoration: const BoxDecoration(
           color: Colors.white,

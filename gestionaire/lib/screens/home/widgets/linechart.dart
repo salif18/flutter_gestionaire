@@ -19,7 +19,6 @@ class MyLineChart extends StatelessWidget {
             // Titre de l'axe des X (en haut)
 
             axisNameWidget: Container(
-              
               child: Text(
                 "Statistiques de la vente",
                 style: GoogleFonts.roboto(
@@ -35,7 +34,7 @@ class MyLineChart extends StatelessWidget {
             sideTitles: SideTitles(showTitles: false),
           ),
         ),
-       backgroundColor: const Color.fromARGB(255, 22, 7, 48), // Couleur de fond du graphique
+      //  backgroundColor: const Color.fromARGB(255, 22, 7, 48), // Couleur de fond du graphique
         lineBarsData: [
           // Configuration de la ligne du graphique
           LineChartBarData(
@@ -44,7 +43,7 @@ class MyLineChart extends StatelessWidget {
            // color: Colors.red, // Largeur de la ligne
             belowBarData: BarAreaData(
               show: true, 
-              color: Colors.teal// Affiche la zone sous la ligne
+              // color: Colors.teal// Affiche la zone sous la ligne
             ),
             spots:const [
               FlSpot(0, 0), // Point 1

@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:gestionaire/context/cartprovider.dart';
 import 'package:gestionaire/screens/auth/login.dart';
+import 'package:provider/provider.dart';
+import 'package:gestionaire/context/authprovider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context)=> AuthNotifier()),
+      ChangeNotifierProvider(create: (context) => CartNotifier())
+    ],
+      child:const MyApp()
+      )
+  );
 }
 
 class MyApp extends StatefulWidget {

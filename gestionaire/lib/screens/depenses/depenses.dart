@@ -46,7 +46,7 @@ class DepensesWidgets extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return Container(
-              height: MediaQuery.of(context).size.height * 0.7,
+              height: MediaQuery.of(context).size.height * 0.6,
               padding: const EdgeInsets.all(15),
               child: SingleChildScrollView(
                 child: Form(
