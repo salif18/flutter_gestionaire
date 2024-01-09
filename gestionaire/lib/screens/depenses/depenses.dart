@@ -106,7 +106,7 @@ class DepensesWidgets extends StatelessWidget {
                       ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(300, 50),
-                            backgroundColor: Colors.teal,
+                            backgroundColor: Color.fromARGB(255, 226, 173, 15),
                           ),
                           onPressed: () {},
                           icon: const Icon(Icons.save_alt,
