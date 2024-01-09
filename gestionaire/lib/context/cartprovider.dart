@@ -27,15 +27,16 @@ class CartNotifier extends ChangeNotifier {
         _total = 0;
 
 //add to cart
-  void _addTocart(item, int qty) {
+  void addTocart(Products item, int qty) {
     final existeItem =
         _cart.firstWhereOrNull((lastItem) => lastItem.id == item.id);
     if (existeItem != null) {
       existeItem.quantity += qty;
     } else {
       _cart.add(CartItem(item.id, item.name, item.categorie, qty,
-          item.prixAchat, item.prixVente, item.somme));
+          item.prixAchat, item.prixVente,2000));
     }
+    qty =0;
     notifyListeners();
   }
 
@@ -46,7 +47,7 @@ class CartNotifier extends ChangeNotifier {
   }
 
 //incrementation
-  void _increment(CartItem item) {
+  void increment(CartItem item) {
     if (item.quantity > 0) {
       _cart = _cart
           .map((lastItem) => lastItem.id == item.id
@@ -62,10 +63,11 @@ class CartNotifier extends ChangeNotifier {
           .toList();
       notifyListeners();
     }
+    
   }
 
 //decrementation
-  void _decrement(CartItem item) {
+  void decrement(CartItem item) {
     if (item.quantity > 0) {
       _cart = _cart
           .map((lastItem) => lastItem.id == item.id
@@ -81,30 +83,30 @@ class CartNotifier extends ChangeNotifier {
           .toList();
       notifyListeners();
     }
+    
   }
 
 //calcule total
-  int _calculateTotal() {
+  int calculateTotal() {
     _total = _cart.fold(
         0, (acc, product) => acc + product.quantity * product.prixVente);
     return _total;
   }
 
 //calcule stocks
-  Future<void> _configStocks(CartItem item) async {
+  Future<void> configStocks(CartItem item) async {
     final product = _products.firstWhere((e) => e.id == item.id);
     if (item.quantity > 0 && item.quantity <= product.stocks) {
       product.stocks -= item.quantity;
       //envoie stock dans la base de donne
+
     }
   }
 
   //recalcule stocks en cas d'annulation
-  Future<void> _cancelStocks(CartItem item) async {
+  Future<void> cancelStocks(CartItem item) async {
     final product = _products.firstWhere((e) => e.id == item.id);
-    if (
-            item.quantity > 0 &&
-            item.quantity <= product.stocks ||
+    if (item.quantity > 0 && item.quantity <= product.stocks ||
         item.quantity >= product.stocks) {
       product.stocks += item.quantity;
       //envoie stock dans la base de donne

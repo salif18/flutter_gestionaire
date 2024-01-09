@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gestionaire/context/cartprovider.dart';
 import 'package:gestionaire/models/products.dart';
 import 'package:gestionaire/screens/addproducts/addnew.dart';
 import 'package:gestionaire/screens/products/widgets/product_appbar.dart';
 import 'package:gestionaire/screens/search/search.dart';
 import 'package:gestionaire/screens/vendre/vendreaction.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ProductList extends StatelessWidget {
   ProductList({super.key});
@@ -14,6 +16,8 @@ class ProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartData = Provider.of<CartNotifier>(context);
+    void Function(Products ,int ) addTocart = cartData.addTocart;
     return Scaffold(
       appBar: ProductAppBar(drawerKey: _drawerKey),
       key: _drawerKey,
@@ -42,7 +46,13 @@ class ProductList extends StatelessWidget {
                         style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
                     Text("${product.prixVente}",
                         style: GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
-                    const Icon(Icons.add_shopping_cart_rounded, size: 30, color: Colors.purple),
+                    IconButton(
+                      onPressed: (){
+                            addTocart(product, 1);
+                      }, 
+                      icon:const  Icon(
+                        Icons.add_shopping_cart_rounded, size: 30, color: Colors.purple),
+                        ),
                   ],
                 ),
               );
@@ -80,10 +90,11 @@ class ProductList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           height: MediaQuery.of(context).size.height * 0.8,
-          decoration: const BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -101,9 +112,9 @@ class ProductList extends StatelessWidget {
       builder: (BuildContext context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.8,
-          decoration: const BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),

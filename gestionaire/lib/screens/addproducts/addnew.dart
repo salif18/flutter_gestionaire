@@ -9,7 +9,6 @@ class AddNewProducts extends StatefulWidget {
 }
 
 class _AddNewProductsState extends State<AddNewProducts> {
-
   final GlobalKey _formKey = GlobalKey<FormState>();
 
   final _name = TextEditingController();
@@ -21,149 +20,159 @@ class _AddNewProductsState extends State<AddNewProducts> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Add new product",
-            style:
-                GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.w500)),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _name,
-                  validator: null,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    hintText: "Product name", 
-                    hintStyle: GoogleFonts.aBeeZee(fontSize:18, color:Colors.grey), 
-                    filled: true, 
-                    fillColor: Colors.white, 
-                    border:OutlineInputBorder( 
-                      borderRadius: BorderRadius.circular(20), 
-                      borderSide: BorderSide.none
-                    ), 
-                    prefixIcon: const Icon(Icons.storefront_outlined,size:30)
-                  ),
-                ),
-              ), 
-               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _categrie,
-                  validator: null,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    hintText: "Product categorie", 
-                    hintStyle: GoogleFonts.aBeeZee(fontSize:18, color:Colors.grey), 
-                    filled: true, 
-                    fillColor: Colors.white, 
-                    border:OutlineInputBorder( 
-                      borderRadius: BorderRadius.circular(20), 
-                      borderSide: BorderSide.none
-                    ), 
-                    prefixIcon: const Icon(Icons.category_outlined,size:30)
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _stocks,
-                  validator: null,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Product stocks", 
-                    hintStyle: GoogleFonts.aBeeZee(fontSize:18, color:Colors.grey), 
-                    filled: true, 
-                    fillColor: Colors.white, 
-                    border:OutlineInputBorder( 
-                      borderRadius: BorderRadius.circular(20), 
-                      borderSide: BorderSide.none
-                    ), 
-                    prefixIcon: const Icon(Icons.stroller_outlined,size:30)
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _prixAchat,
-                  validator: null,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Prix d'achat ", 
-                    hintStyle: GoogleFonts.aBeeZee(fontSize:18, color:Colors.grey), 
-                    filled: true, 
-                    fillColor: Colors.white, 
-                    border:OutlineInputBorder( 
-                      borderRadius: BorderRadius.circular(20), 
-                      borderSide: BorderSide.none
-                    ), 
-                    prefixIcon:const Icon(Icons.monetization_on_outlined,size:30)
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _prixVente,
-                  validator: null,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: "Prix de vente ", 
-                    hintStyle: GoogleFonts.aBeeZee(fontSize:18, color:Colors.grey), 
-                    filled: true, 
-                    fillColor: Colors.white, 
-                    border:OutlineInputBorder( 
-                      borderRadius: BorderRadius.circular(20), 
-                      borderSide: BorderSide.none
-                    ), 
-                    prefixIcon:const Icon(Icons.money,size:30)
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: _date,
-                  validator: null,
-                  keyboardType: TextInputType.datetime,
-                  decoration: InputDecoration(
-                    hintText: "Date ", 
-                    hintStyle: GoogleFonts.aBeeZee(fontSize:18, color:Colors.grey), 
-                    filled: true, 
-                    fillColor: Colors.white, 
-                    border:OutlineInputBorder( 
-                      borderRadius: BorderRadius.circular(20), 
-                      borderSide: BorderSide.none
-                    ), 
-                    prefixIcon: const Icon(Icons.calendar_month_outlined,size:30)
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0), 
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple, 
-                    minimumSize: const Size(300, 50)
-                  ),
-                  onPressed: (){}, 
-                  icon: const Icon(Icons.save_as_outlined, size:33, color:Colors.white), 
-                  label: Text('AJOUTER',style:GoogleFonts.roboto(fontSize: 18,color:Colors.white, fontWeight: FontWeight.w600))),
-                )
-            ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 20),
+            height: 50,
+            child: Center(
+              child: Text("Ajouter produits",
+                  style: GoogleFonts.roboto(
+                      fontSize: 20, fontWeight: FontWeight.w500)),
+            ),
           ),
-        ),
+          Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _name,
+                      validator: null,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                          hintText: "Product name",
+                          hintStyle: GoogleFonts.aBeeZee(
+                              fontSize: 18, color: Colors.grey),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon:
+                              const Icon(Icons.storefront_outlined, size: 30)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _categrie,
+                      validator: null,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                          hintText: "Product categorie",
+                          hintStyle: GoogleFonts.aBeeZee(
+                              fontSize: 18, color: Colors.grey),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon:
+                              const Icon(Icons.category_outlined, size: 30)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _stocks,
+                      validator: null,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Product stocks",
+                          hintStyle: GoogleFonts.aBeeZee(
+                              fontSize: 18, color: Colors.grey),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon:
+                              const Icon(Icons.stroller_outlined, size: 30)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _prixAchat,
+                      validator: null,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Prix d'achat ",
+                          hintStyle: GoogleFonts.aBeeZee(
+                              fontSize: 18, color: Colors.grey),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon: const Icon(Icons.monetization_on_outlined,
+                              size: 30)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _prixVente,
+                      validator: null,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: "Prix de vente ",
+                          hintStyle: GoogleFonts.aBeeZee(
+                              fontSize: 18, color: Colors.grey),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon: const Icon(Icons.money, size: 30)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: _date,
+                      validator: null,
+                      keyboardType: TextInputType.datetime,
+                      decoration: InputDecoration(
+                          hintText: "Date ",
+                          hintStyle: GoogleFonts.aBeeZee(
+                              fontSize: 18, color: Colors.grey),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none),
+                          prefixIcon: const Icon(Icons.calendar_month_outlined,
+                              size: 30)),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.purple,
+                            minimumSize: const Size(300, 50)),
+                        onPressed: () {},
+                        icon: const Icon(Icons.save_as_outlined,
+                            size: 33, color: Colors.white),
+                        label: Text('AJOUTER',
+                            style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600))),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

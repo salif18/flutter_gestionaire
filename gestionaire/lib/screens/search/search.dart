@@ -17,25 +17,29 @@ class _MySearchWidgetState extends State<MySearchWidget> {
       width: MediaQuery.of(context).size.width *0.8,
       child: ListView( 
         children: [ 
-          DrawerHeader(
-            child: Form(
+            Form(
               key:_searchKey,
-              child: TextFormField(
-               controller: null, 
-               validator: null, 
-               decoration: InputDecoration(
-                hintText: "Search product", 
-                hintStyle: GoogleFonts.aBeeZee(fontSize: 20, ), 
-                fillColor: Colors.grey[100], 
-                filled: true, 
-                suffixIcon: Icon(Icons.search_outlined, size:28, color:Colors.deepPurple[400]), 
-                border: OutlineInputBorder( 
-                  borderRadius: BorderRadius.circular(50), 
-                )
-               ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: SizedBox(
+                  height: 60,
+                  child: TextFormField(
+                   controller: null,
+                   validator: null,
+                   decoration: InputDecoration(
+                    hintText: "Search product",
+                    hintStyle: GoogleFonts.aBeeZee(fontSize: 20, ),
+                    fillColor: Colors.grey[100],
+                    filled: true,
+                    suffixIcon: Icon(Icons.search_outlined, size:28, color:Colors.deepPurple[400]),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    )
+                   ),
+                  ),
+                ),
               ),
-              )
-            ), 
+              ),
             Padding(
               padding: EdgeInsets.all(10),
               child: Column(
