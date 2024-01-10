@@ -69,12 +69,14 @@ class _VendreActionCartState extends State<VendreActionCart> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            if(e.quantity > 1)
                             IconButton(
                               onPressed: () {
                                   decrement(e);
                               },
                               icon: const Icon(Icons.remove_outlined, size: 30),
                             ),
+
                             Text("${e.quantity}",
                                 style: GoogleFonts.roboto(
                                     fontSize: 20,

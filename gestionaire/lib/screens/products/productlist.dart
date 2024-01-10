@@ -7,7 +7,6 @@ import 'package:gestionaire/screens/products/widgets/product_appbar.dart';
 import 'package:gestionaire/screens/search/search.dart';
 import 'package:gestionaire/screens/vendre/vendreaction.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -85,7 +84,7 @@ class ProductList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-              backgroundColor: Colors.grey[400],
+              backgroundColor: Colors.grey[300],
               onPressed: () {
                 _showVenteProductsModal(context);
               },
@@ -94,7 +93,7 @@ class ProductList extends StatelessWidget {
                       badgeStyle: const badges.BadgeStyle(
                         badgeColor: Colors.blue,
                       ),
-                      position: badges.BadgePosition.topEnd(top: -20),
+                      position: badges.BadgePosition.topEnd(top: -26),
                       badgeContent: Text("${cart.length}",
                           style: GoogleFonts.roboto(
                               fontSize: 18,
