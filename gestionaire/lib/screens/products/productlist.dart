@@ -9,6 +9,7 @@ import 'package:gestionaire/screens/vendre/vendreaction.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badges;
 
 class ProductList extends StatelessWidget {
   ProductList({super.key});
@@ -19,11 +20,12 @@ class ProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<CartNotifier>(context);
-    void Function(Products ,int ) addTocart = cartData.addTocart;
+    void Function(Products, int) addTocart = cartData.addTocart;
+    List cart = cartData.cart;
     return Scaffold(
       appBar: ProductAppBar(drawerKey: _drawerKey),
       key: _drawerKey,
-      drawer:const MySearchWidget(),
+      drawer: const MySearchWidget(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -32,7 +34,8 @@ class ProductList extends StatelessWidget {
               return Container(
                 height: 50,
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
@@ -41,29 +44,36 @@ class ProductList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(product.name.toUpperCase(),
-                        style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500)),
+                        style: GoogleFonts.roboto(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
                     Text(product.categorie,
-                        style: GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+                        style: GoogleFonts.roboto(
+                            fontSize: 15, fontWeight: FontWeight.w500)),
                     Text("${product.stocks}",
-                        style: GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
+                        style: GoogleFonts.roboto(
+                            fontSize: 15, fontWeight: FontWeight.w500)),
                     Text("${product.prixVente}",
-                        style: GoogleFonts.roboto(fontSize: 15, fontWeight: FontWeight.w500)),
-                 Row(children: [
-                   IconButton(
-                      onPressed: (){
+                        style: GoogleFonts.roboto(
+                            fontSize: 15, fontWeight: FontWeight.w500)),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
                             addTocart(product, 1);
-                      }, 
-                      icon:const  Icon(
-                        Icons.monetization_on, size: 30, color: Color.fromARGB(255, 243, 170, 11)),
+                          },
+                          icon: const Icon(Icons.monetization_on,
+                              size: 30,
+                              color: Color.fromARGB(255, 243, 170, 11)),
                         ),
-                         IconButton(
-                      onPressed: (){
+                        IconButton(
+                          onPressed: () {
                             _showEditProductsModal(context);
-                      }, 
-                      icon:const  Icon(
-                        Icons.edit, size: 30, color: Colors.greenAccent),
+                          },
+                          icon: const Icon(Icons.edit,
+                              size: 30, color: Colors.greenAccent),
                         ),
-                 ],)  
+                      ],
+                    )
                   ],
                 ),
               );
@@ -75,12 +85,26 @@ class ProductList extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            backgroundColor: const Color.fromARGB(255, 117, 36, 141),
-            onPressed: () {
-              _showVenteProductsModal(context);
-            },
-            child: const Icon(Icons.shopping_cart_outlined, size: 30, color: Colors.white),
-          ),
+              backgroundColor: Colors.grey[400],
+              onPressed: () {
+                _showVenteProductsModal(context);
+              },
+              child: cart.isNotEmpty
+                  ? badges.Badge(
+                      badgeStyle: const badges.BadgeStyle(
+                        badgeColor: Colors.blue,
+                      ),
+                      position: badges.BadgePosition.topEnd(top: -20),
+                      badgeContent: Text("${cart.length}",
+                          style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      child: const Icon(Icons.shopping_cart_outlined,
+                          size: 30, color: Color.fromARGB(255, 29, 27, 27)),
+                    )
+                  : const Icon(Icons.shopping_cart_outlined,
+                      size: 30, color: Color.fromARGB(255, 36, 34, 34))),
           const SizedBox(height: 20),
           FloatingActionButton(
             backgroundColor: const Color.fromARGB(255, 117, 36, 141),
@@ -116,7 +140,7 @@ class ProductList extends StatelessWidget {
     );
   }
 
-   void _showVenteProductsModal(BuildContext context) {
+  void _showVenteProductsModal(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,

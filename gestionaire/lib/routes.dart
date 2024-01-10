@@ -6,6 +6,7 @@ import 'package:gestionaire/screens/home/home_screen.dart';
 import 'package:gestionaire/screens/products/productlist.dart';
 import 'package:gestionaire/screens/rapport/raport.dart';
 import 'package:gestionaire/screens/vendus/productvendus.dart';
+import 'package:line_icons/line_icons.dart';
 
 class Routes extends StatefulWidget {
   const Routes({super.key});
@@ -37,22 +38,22 @@ class _RoutesState extends State<Routes> {
             color: Colors.white,
           ),
           Icon(
-            Icons.stroller_rounded,
+            LineIcons.alternateListAlt,
             size: 33,
             color: Colors.white,
           ),
           Icon(
-            CupertinoIcons.cart_badge_plus,
+           LineIcons.shoppingCartArrowDown,
             size: 33,
             color: Colors.white,
           ),
           Icon(
-            Icons.description_outlined,
+            LineIcons.clipboardList,
             size: 33,
             color: Colors.white,
           ),
           Icon(
-            CupertinoIcons.keyboard_chevron_compact_down,
+            Icons.balance_outlined,
             size: 33,
             color: Colors.white,
           ),
