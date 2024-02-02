@@ -1,21 +1,32 @@
 const db = require("../db/mysqldb");
 const Ventes = require("../models/ventes");
 
-exports.createVente = (req, res) => {
-  const { id, nom, categories, prixAchat, prixVente, stocks, qty, timestamps} = req.body;
-  const ventes = new Ventes( id, nom, categories, prixAchat, prixVente, stocks, qty, timestamps);
-  console.log(ventes);
-  const sql = 'INSERT INTO vente set ?';
-  db.query(sql,[ventes],(err,results)=>{
-    if(err){
-        res.status(500).json({err})
-        console.log(err)
-    }else{
-        res.status(200).json({message:'Vente effectuée avec succès !!'})
-        console.log("vente effectuer")
-    }
-  })
+exports.createVente = async (req, res) => {
+  try {
+    const { id, nom, categories, prixAchat, prixVente, stocks, qty, timestamps } = req.body;
+
+    const sql = 'INSERT INTO vente (id, nom, categories, prixAchat, prixVente, stocks, qty, timestamps) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [id, nom, categories, prixAchat, prixVente, stocks, qty, timestamps];
+
+    const results = await new Promise((resolve, reject) => {
+      db.query(sql, values, (err, results) => {
+        if (err) {
+          console.error('Erreur lors de l\'insertion de la vente :', err);
+          reject(err);
+        } else {
+          console.log('Vente effectuée avec succès !!');
+          resolve(results);
+        }
+      });
+    });
+
+    res.status(200).json({ message: 'Vente effectuée avec succès !!', results });
+  } catch (error) {
+    console.error('Erreur lors de la création de la vente :', error);
+    res.status(500).json({ error: 'Erreur serveur lors de la vente' });
+  }
 };
+
 
 exports.getVentes = (req,res) =>{
     const sql = 'SELECT * FROM vente ORDER BY timestamps DESC';

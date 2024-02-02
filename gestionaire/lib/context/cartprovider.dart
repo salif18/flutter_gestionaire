@@ -21,30 +21,9 @@ class CartItem {
 class CartNotifier extends ChangeNotifier {
   int _total;
   List<CartItem> _cart;
-  final List<Map<String, dynamic>> _products = [];
-
+  
   // Vous pouvez appeler getAllProducts() dans le constructeur de la classe.
-  CartNotifier() : _cart = [], _total = 0 {
-    getAllProducts().then((_) {
-    print(_products);
-  });
-  }
-
-//obtenir tous les produits
-  Future<void> getAllProducts() async {
-    const String baseUrlProducts = "http://10.0.2.2:3000/produits";
-    try {
-      final res = await http.get(Uri.parse(baseUrlProducts));
-      final data = json.decode(res.body);
-      if (data is List) {
-        _products.addAll(List<Map<String, dynamic>>.from(data));
-      } else {
-        throw Exception("La réponse n'est pas une liste JSON");
-      }
-    } catch (err) {
-      throw Exception("Erreur réseau: $err");
-    }
-  }
+  CartNotifier() : _cart = [], _total = 0 ;
 
 //ajouter produit dans lae panier
   void addTocart(Map<String, dynamic> item, int qty) {
@@ -119,25 +98,25 @@ class CartNotifier extends ChangeNotifier {
   const String baseUrlVendres = "http://10.0.2.2:3000/ventes";
   try {
     await Future.forEach(_cart, (CartItem e) async {
-      final Map<String, dynamic> requestBody = {
-        "id": e.id,
-        "nom": e.nom,
-        "categories": e.categories,
-        "prixAchat": e.prixAchat,
-        "prixVente": e.prixVente,
-        "stocks": e.stocks,
-        "qty": e.quantity,
-        "timestamps": selectedDate.toIso8601String(),
-      };
 
       final res = await http.post(
         Uri.parse(baseUrlVendres),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(requestBody),
+        body: jsonEncode({
+          "id": e.id,
+          "nom": e.nom,
+          "categories": e.categories,
+          "prixAchat": e.prixAchat,
+          "prixVente": e.prixVente,
+          "stocks": e.stocks,
+          "qty": e.quantity,
+          "timestamps": selectedDate.toIso8601String(),
+        }),
       );
 
       if (res.statusCode == 200) {
         await configStock(e);
+        print(res.body);
       } else {
         print("erreur");
       }
@@ -167,9 +146,11 @@ final Map<String ,dynamic> prod = product[0];
       } catch (err) {
         print(err);
       }
-  }
-    } else {
+  }else {
       print('Stock insuffisant pour le produit ${item.nom}');
+    }
+    } else {
+      
     }
   }
 
