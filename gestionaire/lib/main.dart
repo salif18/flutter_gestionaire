@@ -3,8 +3,11 @@ import 'package:gestionaire/context/cartprovider.dart';
 import 'package:gestionaire/screens/auth/login.dart';
 import 'package:provider/provider.dart';
 import 'package:gestionaire/context/authprovider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main(){
+//  WidgetsFlutterBinding.ensureInitialized();
+//  await Firebase.initializeApp();
   runApp(
     MultiProvider(
     providers: [

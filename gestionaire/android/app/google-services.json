@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "151767993864",
+    "project_id": "gestion-de-boutique",
+    "storage_bucket": "gestion-de-boutique.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151767993864:android:18911656b993b091014bbd",
+        "android_client_info": {
+          "package_name": "com.smeckdev.gestionaire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdJ1tQFvF0jf_1dsc-4oP3hgBjTQoSvw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

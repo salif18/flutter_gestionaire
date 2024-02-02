@@ -4,6 +4,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:gestionaire/screens/depenses/depenses.dart';
 import 'package:gestionaire/screens/home/home_screen.dart';
 import 'package:gestionaire/screens/products/productlist.dart';
+// import 'package:gestionaire/screens/products/productlistdatatable.dart';
 import 'package:gestionaire/screens/rapport/raport.dart';
 import 'package:gestionaire/screens/vendus/productvendus.dart';
 import 'package:line_icons/line_icons.dart';
@@ -23,7 +24,8 @@ class _RoutesState extends State<Routes> {
     return Scaffold(
       body: [
         const HomeScreen(),
-        ProductList(),
+        const ProductList(),
+        //ProductListInDataTable(),
         const ProductVendus(),
         const MyRapport(),
         const DepensesWidgets(),

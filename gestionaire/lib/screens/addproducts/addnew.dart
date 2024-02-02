@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:date_field/date_field.dart';
 
 class AddNewProducts extends StatefulWidget {
   const AddNewProducts({super.key});
@@ -16,7 +17,7 @@ class _AddNewProductsState extends State<AddNewProducts> {
   final _stocks = TextEditingController();
   final _prixAchat = TextEditingController();
   final _prixVente = TextEditingController();
-  final _date = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +136,9 @@ class _AddNewProductsState extends State<AddNewProducts> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: _date,
-                      validator: null,
-                      keyboardType: TextInputType.datetime,
+                    child: DateTimeFormField(
                       decoration: InputDecoration(
-                          hintText: "Date ",
+                          hintText: 'Choisir la date',
                           hintStyle: GoogleFonts.aBeeZee(
                               fontSize: 18, color: Colors.grey),
                           filled: true,
@@ -148,8 +146,15 @@ class _AddNewProductsState extends State<AddNewProducts> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide.none),
-                          prefixIcon: const Icon(Icons.calendar_month_outlined,
-                              size: 30)),
+                          prefixIcon:
+                              const Icon(Icons.calendar_month, size: 30)),
+                      firstDate: DateTime.now().add(const Duration(days: 10)),
+                      lastDate: DateTime.now().add(const Duration(days: 40)),
+                      initialPickerDateTime:
+                          DateTime.now().add(const Duration(days: 20)),
+                      onChanged: (DateTime? value) {
+                            selectedDate = value!;
+                      },
                     ),
                   ),
                   const SizedBox(height: 20),
