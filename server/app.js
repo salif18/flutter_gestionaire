@@ -11,7 +11,7 @@ app.use(express.json())
 app.use('/produits',produitRouter);
 app.use('/ventes',ventesRouter);
 app.use('/depenses',depensesRouter)
-
+// app.use('/auth');
 //fonction connection a la base de donnees
 
 

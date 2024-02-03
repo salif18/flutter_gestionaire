@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 
+//domaine de server
+String serverDomaine = "http://10.0.2.2:3000";
+
 class CartItem {
   int id;
   String nom;
@@ -21,14 +24,17 @@ class CartItem {
 class CartNotifier extends ChangeNotifier {
   int _total;
   List<CartItem> _cart;
-  
+
   // Vous pouvez appeler getAllProducts() dans le constructeur de la classe.
-  CartNotifier() : _cart = [], _total = 0 ;
+  CartNotifier()
+      : _cart = [],
+        _total = 0;
 
 //ajouter produit dans lae panier
   void addTocart(Map<String, dynamic> item, int qty) {
-    final existeItem = _cart.isNotEmpty ?
-        _cart.firstWhereOrNull((lastItem) => lastItem.id == item["id"]) : null;
+    final existeItem = _cart.isNotEmpty
+        ? _cart.firstWhereOrNull((lastItem) => lastItem.id == item["id"])
+        : null;
     if (existeItem != null) {
       existeItem.quantity += qty;
     } else {
@@ -92,90 +98,85 @@ class CartNotifier extends ChangeNotifier {
     return _total;
   }
 
+//envoyer les produits acheter dans la base
+  Future<void> sendCart(DateTime selectedDate) async {
+    final String baseUrlVendres = "$serverDomaine/ventes";
+    try {
+      await Future.forEach(_cart, (CartItem e) async {
+        final res = await http.post(
+          Uri.parse(baseUrlVendres),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({
+            "id": e.id,
+            "nom": e.nom,
+            "categories": e.categories,
+            "prixAchat": e.prixAchat,
+            "prixVente": e.prixVente,
+            "stocks": e.stocks,
+            "qty": e.quantity,
+            "timestamps": selectedDate.toIso8601String(),
+          }),
+        );
 
-//envoyer les produits acheter dans la base 
- Future<void> sendCart(DateTime selectedDate) async {
-  const String baseUrlVendres = "http://10.0.2.2:3000/ventes";
-  try {
-    await Future.forEach(_cart, (CartItem e) async {
-
-      final res = await http.post(
-        Uri.parse(baseUrlVendres),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "id": e.id,
-          "nom": e.nom,
-          "categories": e.categories,
-          "prixAchat": e.prixAchat,
-          "prixVente": e.prixVente,
-          "stocks": e.stocks,
-          "qty": e.quantity,
-          "timestamps": selectedDate.toIso8601String(),
-        }),
-      );
-
-      if (res.statusCode == 200) {
-        await configStock(e);
-        print(res.body);
-      } else {
-        print("erreur");
-      }
-    });
-  } catch (e) {
-    print("erreur $e");
+        if (res.statusCode == 200) {
+          await configStock(e);
+          _cart.clear();
+        } else {
+          throw Exception("erreur");
+        }
+      });
+    } catch (e) {
+      throw Exception("erreur $e");
+    }
   }
-}
-
-
 
 //mis a jour du stock des produits acheter
   Future<void> configStock(CartItem item) async {
-    // final product = _products.firstWhere((x) => x['id'] == item.id);
-final res = await http.get(Uri.parse('http://10.0.2.2:3000/produits/${item.id}'));
-if(res.statusCode == 200){
-final product = json.decode(res.body);
-final Map<String ,dynamic> prod = product[0];
-    if (item.quantity > 0 && item.quantity <= prod['stocks']) {
-      prod['stocks'] -= item.quantity;
-      try {
-        await http.put(
-          Uri.parse('http://10.0.2.2:3000/produits/newStock/${prod['id']}'),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode({"stocks":prod['stocks']}),
-        );
-      } catch (err) {
-        print(err);
+    final res = await http.get(Uri.parse('$serverDomaine/produits/${item.id}'));
+    if (res.statusCode == 200) {
+      final product = json.decode(res.body);
+      final Map<String, dynamic> prod = product[0];
+      if (item.quantity > 0 && item.quantity <= prod['stocks']) {
+        prod['stocks'] -= item.quantity;
+        try {
+          await http.put(
+            Uri.parse('$serverDomaine/produits/newStock/${prod['id']}'),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({"stocks": prod['stocks']}),
+          );
+        } catch (err) {
+          throw Exception(err);
+        }
+      } else {
+        print('Stock insuffisant pour le produit ${item.nom}');
       }
-  }else {
-      print('Stock insuffisant pour le produit ${item.nom}');
-    }
     } else {
-      
+      throw Exception("Erreur de chargements");
     }
   }
 
 //mis a jour de stock des produit retourner
   Future<void> cancelStocks(CartItem item) async {
     //final product = _products.firstWhere((e) => e["id"] == item.id);
-    final res = await http.get(Uri.parse('http://10.0.2.2:3000/produits/${item.id}'));
-    if(res.statusCode == 200){
+    final res = await http.get(Uri.parse('$serverDomaine/produits/${item.id}'));
+    if (res.statusCode == 200) {
       final product = json.decode(res.body);
-      final Map<String ,dynamic> prod = product[0];
-    if (item.quantity > 0 && item.quantity <= prod["stocks"] ||
-        item.quantity >= prod["stocks"]) {
-      prod["stocks"] += item.quantity;
-      
-      // Envoie de la mise à jour du stock à la base de données
-      try {
-        await http.put(
-          Uri.parse('http://10.0.2.2:3000/produits/newStock/${prod['id']}'),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode({"stocks":prod['stocks']}),
-        );
-      } catch (err) {
-        print(err);
+      final Map<String, dynamic> prod = product[0];
+      if (item.quantity > 0 && item.quantity <= prod["stocks"] ||
+          item.quantity >= prod["stocks"]) {
+        prod["stocks"] += item.quantity;
+        
+        // Envoie de la mise à jour du stock à la base de données
+        try {
+          await http.put(
+            Uri.parse('$serverDomaine/produits/newStock/${prod['id']}'),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({"stocks": prod['stocks']}),
+          );
+        } catch (err) {
+          throw Exception(err);
+        }
       }
-    }
     }
   }
 

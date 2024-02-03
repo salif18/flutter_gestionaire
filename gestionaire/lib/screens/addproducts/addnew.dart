@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:gestionaire/api/productservices.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:date_field/date_field.dart';
 
 class AddNewProducts extends StatefulWidget {
-  const AddNewProducts({super.key});
+  const AddNewProducts({Key? key}) : super(key: key);
 
   @override
   State<AddNewProducts> createState() => _AddNewProductsState();
 }
 
 class _AddNewProductsState extends State<AddNewProducts> {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final _name = TextEditingController();
-  final _categrie = TextEditingController();
-  final _stocks = TextEditingController();
-  final _prixAchat = TextEditingController();
-  final _prixVente = TextEditingController();
+  // Obtenez l'API getAllProducts dans la classe ProductServiceApi
+  final ProductServiceApi productServiceApi = ProductServiceApi();
+
+  final TextEditingController _nom = TextEditingController();
+  final TextEditingController _categories = TextEditingController();
+  final TextEditingController _prixAchat = TextEditingController();
+  final TextEditingController _prixVente = TextEditingController();
+  final TextEditingController _stocks = TextEditingController();
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -43,8 +47,13 @@ class _AddNewProductsState extends State<AddNewProducts> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      controller: _name,
-                      validator: null,
+                      controller: _nom,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez remplir ce champ";
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                           hintText: "Product name",
@@ -62,8 +71,13 @@ class _AddNewProductsState extends State<AddNewProducts> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      controller: _categrie,
-                      validator: null,
+                      controller: _categories,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez remplir ce champ";
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                           hintText: "Product categorie",
@@ -82,7 +96,12 @@ class _AddNewProductsState extends State<AddNewProducts> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: _stocks,
-                      validator: null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez remplir ce champ";
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           hintText: "Product stocks",
@@ -101,7 +120,12 @@ class _AddNewProductsState extends State<AddNewProducts> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: _prixAchat,
-                      validator: null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez remplir ce champ";
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           hintText: "Prix d'achat ",
@@ -120,7 +144,12 @@ class _AddNewProductsState extends State<AddNewProducts> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: _prixVente,
-                      validator: null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Veuillez remplir ce champ";
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           hintText: "Prix de vente ",
@@ -153,7 +182,9 @@ class _AddNewProductsState extends State<AddNewProducts> {
                       initialPickerDateTime:
                           DateTime.now().add(const Duration(days: 20)),
                       onChanged: (DateTime? value) {
-                            selectedDate = value!;
+                        setState(() {
+                          selectedDate = value!;
+                        });
                       },
                     ),
                   ),
@@ -164,7 +195,25 @@ class _AddNewProductsState extends State<AddNewProducts> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.purple,
                             minimumSize: const Size(300, 50)),
-                        onPressed: () {},
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Map<String, dynamic> data = {
+                              "nom": _nom.text,
+                              "categories": _categories.text,
+                              "prixAchat": _prixAchat.text,
+                              "prixVente": _prixVente.text,
+                              "stocks": _stocks.text,
+                              "dateAchat": selectedDate.toIso8601String()
+                            };
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Envoi en cours")));
+                            FocusScope.of(context)
+                                .requestFocus(FocusNode());
+                                //envoie vers base de donnee
+                            productServiceApi.postProduct(data);
+                          }
+                        },
                         icon: const Icon(Icons.save_as_outlined,
                             size: 33, color: Colors.white),
                         label: Text('AJOUTER',

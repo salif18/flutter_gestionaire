@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:gestionaire/context/cartprovider.dart';
 import 'package:gestionaire/screens/addproducts/addnew.dart';
@@ -11,6 +9,7 @@ import 'package:gestionaire/screens/vendre/vendreaction.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:gestionaire/api/productservices.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({Key? key}) : super(key: key);
@@ -21,28 +20,18 @@ class ProductList extends StatefulWidget {
 
 class _ProductListState extends State<ProductList> {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey<ScaffoldState>();
+
+  //tableau des produits recuperer
   StreamController productsStreamController = StreamController();
 
-  final String baseUrlProducts = "http://10.0.2.2:3000/produits";
-
-  Future getAllProducts() async {
-    try {
-      final res = await http.get(Uri.parse(baseUrlProducts));
-      if (res.statusCode == 200) {
-        final data = json.decode(res.body);
-        productsStreamController.add(data);
-      } else {
-        throw Exception("Erreur de chargements des donnees");
-      }
-    } catch (err) {
-      throw Exception("Erreur réseau: $err");
-    }
-  }
+//obtenir api getAllProducts dans la classe productServcices
+  final ProductServiceApi productServiceApi = ProductServiceApi();
+  
 
   @override
   void initState() {
     super.initState();
-    getAllProducts();
+    productServiceApi.getAllProducts(productsStreamController);
   }
 
   @override

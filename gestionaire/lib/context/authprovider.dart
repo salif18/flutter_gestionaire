@@ -9,13 +9,13 @@ class AuthNotifier extends ChangeNotifier{
       _userId ="",
       _token ="";
 
-  void _login( String userId, String token){
+  void login( String userId, String token){
     _userId = userId;
     _token = token; 
     notifyListeners();
   }
 
- void _logout(){ 
+ void logout(){ 
   _userId = "";
   _token ="";
   notifyListeners();
