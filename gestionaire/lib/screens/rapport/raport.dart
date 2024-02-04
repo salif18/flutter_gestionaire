@@ -298,7 +298,7 @@ class _MyRapportState extends State<MyRapport> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              "${product["stocks"]}",
+                                              "${product["qty"]}",
                                               style: GoogleFonts.roboto(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w500),

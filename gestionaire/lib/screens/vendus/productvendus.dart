@@ -14,7 +14,10 @@ class ProductVendus extends StatefulWidget {
 }
 
 class _ProductVendusState extends State<ProductVendus> {
+
+  //tableau de stock des donnee recuperer
   StreamController ventesStreamController = StreamController();
+  //appell de la fonction get vente depuis la class 
   final VentesServicesApi ventesServicesApi = VentesServicesApi();
 
   @override
@@ -103,7 +106,7 @@ class _ProductVendusState extends State<ProductVendus> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "${product["stocks"]}",
+                                  "${product["qty"]}",
                                   style: GoogleFonts.roboto(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500),
