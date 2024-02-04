@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:date_field/date_field.dart';
 import 'package:gestionaire/api/depenserservices.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -184,7 +184,6 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // ... Votre contenu actuel
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: StreamBuilder(
@@ -201,6 +200,9 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                       final List depenses = snapshot.data;
                       return Column(
                         children: depenses.map((depense) {
+                          DateTime date = DateTime.parse(depense["timestamps"]);
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
                           return Container(
                             height: 90,
                             margin: const EdgeInsets.symmetric(
@@ -238,24 +240,23 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                    depense["timestamps"],
+                                      formattedDate,
                                       style: GoogleFonts.roboto(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     IconButton(
-                                        onPressed: () {
-                                          depensesServicesApi
-                                              .removeDepenses(depense);
-                                        },
-                                        icon: const Icon(
-                                            Icons.delete_outline_rounded,
-                                            size: 33))
+                                      onPressed: () {
+                                        depensesServicesApi.removeDepenses(depense);
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete_outline_rounded,
+                                        size: 33,
+                                      ),
+                                    )
                                   ],
                                 )
-
-                                // ... Autres champs de dépenses
                               ],
                             ),
                           );
@@ -269,6 +270,7 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
           ),
         ),
       ),
+      
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

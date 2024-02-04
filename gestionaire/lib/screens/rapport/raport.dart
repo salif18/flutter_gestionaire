@@ -46,7 +46,7 @@ class _MyRapportState extends State<MyRapport> {
   void initState() {
     super.initState();
     ventesServicesApi.getAllVentes(ventesStreamController);
-    getVenteFilterDate();
+    
   }
 
   @override
@@ -61,8 +61,10 @@ class _MyRapportState extends State<MyRapport> {
       if (response.statusCode == 200) {
         setState(() {
           final vendues = json.decode(response.body);
+          DateTime date = DateTime.parse('$depenseDate');
+          String formattedDate = DateFormat('yyyy-MM-dd').format(date);
           ventesFilter = vendues
-              .where((x) => x['timestamps'].contains(formattedDate))
+              .where((x) => x['timestamps'] == formattedDate)
               .toList();
           print(ventesFilter);
         });
@@ -222,11 +224,9 @@ class _MyRapportState extends State<MyRapport> {
                         if (value != null) {
                           setState(() {
                             depenseDate = value;
-                            formattedDate =
-                                DateFormat('yyyy-MM-dd').format(depenseDate);
+                            
                           });
-
-                          print('Date sélectionnée : $formattedDate');
+                          getVenteFilterDate();
                         }
                       },
                     ),
