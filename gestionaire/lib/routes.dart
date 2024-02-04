@@ -4,6 +4,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:gestionaire/screens/depenses/depenses.dart';
 import 'package:gestionaire/screens/home/home_screen.dart';
 import 'package:gestionaire/screens/products/productlist.dart';
+import 'package:gestionaire/screens/rapport/demorapport.dart';
 // import 'package:gestionaire/screens/products/productlistdatatable.dart';
 import 'package:gestionaire/screens/rapport/raport.dart';
 import 'package:gestionaire/screens/vendus/productvendus.dart';
@@ -25,7 +26,6 @@ class _RoutesState extends State<Routes> {
       body: [
         const HomeScreen(),
         const ProductList(),
-        //ProductListInDataTable(),
         const ProductVendus(),
         const MyRapport(),
         const DepensesWidgets(),
@@ -40,28 +40,28 @@ class _RoutesState extends State<Routes> {
             color: Colors.white,
           ),
           Icon(
-            LineIcons.alternateListAlt,
+            Icons.assured_workload_outlined,
             size: 33,
             color: Colors.white,
           ),
           Icon(
-           LineIcons.shoppingCartArrowDown,
+           Icons.archive,
             size: 33,
             color: Colors.white,
           ),
           Icon(
-            LineIcons.clipboardList,
+            Icons.assignment_rounded,
             size: 33,
             color: Colors.white,
           ),
           Icon(
-            Icons.balance_outlined,
+            Icons.savings_outlined,
             size: 33,
             color: Colors.white,
           ),
         ],
         color: const Color.fromARGB(255, 117, 36, 141),
-        buttonBackgroundColor: const Color.fromARGB(255, 126, 61, 248),
+        buttonBackgroundColor:const Color.fromARGB(255, 202, 164, 51), //const Color.fromARGB(255, 126, 61, 248),
         backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 600),

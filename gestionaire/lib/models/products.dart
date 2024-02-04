@@ -1,11 +1,11 @@
 class Products{
-    int id ;
-    String nom ;
-    String categories ;
-    int prixAchat ;
-    int prixVente ;
-    int stocks ;
-    String dateAchat ;
+  final int id ;
+  final String nom ;
+  final String categories ;
+  final int prixAchat ;
+  final int prixVente ;
+  final int stocks;
+  final String dateAchat ;
 
  Products({
     required this.id,
@@ -17,16 +17,4 @@ class Products{
     required this.dateAchat
   });
 
-// Ajoutez une méthode fromJson ici
-  factory Products.fromJson(Map<String, dynamic> json) {
-    return Products(
-      id: json['id'],
-      nom: json['nom'],
-      categories: json['categories'],
-      prixAchat: json['prixAchat'],
-      prixVente: json['prixVente'],
-      stocks: json['stocks'],
-      dateAchat: json['dateAchat']
-    );
-  }
 }

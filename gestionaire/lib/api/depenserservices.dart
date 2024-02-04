@@ -42,9 +42,9 @@ class DepensesServicesApi {
 
 
 //supprimer un produits
-  Future removeDepenses(int id) async {
+  Future removeDepenses(depenseSelected) async {
     try {
-      final response = await http.delete(Uri.parse('$depensesUrl/$id'),
+      final response = await http.delete(Uri.parse('$depensesUrl/${depenseSelected["id"]}'),
           headers: {"Content-Type": "application/json"});
       if (response.statusCode == 200) {
         return json.decode(response.body);

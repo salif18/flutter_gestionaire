@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+
 //domaine server
 String serverDomaine = "http://10.0.2.2:3000";
 String ventesApi = "/ventes";
@@ -68,12 +69,14 @@ class VentesServicesApi {
 
 
 //supprimer un produits
-  Future removeDepenses(int id) async {
+  Future removeVentes(Map<String, dynamic> item ,cancelStocks) async {
     try {
-      final response = await http.delete(Uri.parse('$ventesUrl/$id'),
+      final response = await http.delete(Uri.parse('$ventesUrl/${item["id"]}'),
           headers: {"Content-Type": "application/json"});
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        await json.decode(response.body);
+        //vente annuler retourner le stock
+        cancelStocks(item);
       } else {
         return "Erreur de suppression";
       }

@@ -31,31 +31,39 @@ class CartNotifier extends ChangeNotifier {
         _total = 0;
 
 //ajouter produit dans lae panier
-  void addTocart(Map<String, dynamic> item, int qty) {
+  void addTocart(Map<String, dynamic> productSelected, int qty) {
     final existeItem = _cart.isNotEmpty
-        ? _cart.firstWhereOrNull((lastItem) => lastItem.id == item["id"])
+        ? _cart.firstWhereOrNull(
+            (lastItem) => lastItem.id == productSelected["id"])
         : null;
     if (existeItem != null) {
       existeItem.quantity += qty;
     } else {
-      _cart.add(CartItem(item["id"], item["nom"], item["categories"], qty,
-          item["prixAchat"], item["prixVente"], item["stocks"], 2000));
+      _cart.add(CartItem(
+          productSelected["id"],
+          productSelected["nom"],
+          productSelected["categories"],
+          qty,
+          productSelected["prixAchat"],
+          productSelected["prixVente"],
+          productSelected["stocks"],
+          2000));
     }
     qty = 0;
     notifyListeners();
   }
 
 //supprimer produit de panier
-  void removeTocart(CartItem item) {
-    _cart.remove(item);
+  void removeTocart(CartItem productSelected) {
+    _cart.remove(productSelected);
     notifyListeners();
   }
 
 //incrementer produit dans le panier
-  void increment(CartItem item) {
-    if (item.quantity > 0) {
+  void increment(CartItem productSelected) {
+    if (productSelected.quantity > 0) {
       _cart = _cart
-          .map((lastItem) => lastItem.id == item.id
+          .map((lastItem) => lastItem.id == productSelected.id
               ? CartItem(
                   lastItem.id,
                   lastItem.nom,
@@ -72,10 +80,10 @@ class CartNotifier extends ChangeNotifier {
   }
 
 //decrementer produit de panier
-  void decrement(CartItem item) {
-    if (item.quantity > 0) {
+  void decrement(CartItem productSelected) {
+    if (productSelected.quantity > 0) {
       _cart = _cart
-          .map((lastItem) => lastItem.id == item.id
+          .map((lastItem) => lastItem.id == productSelected.id
               ? CartItem(
                   lastItem.id,
                   lastItem.nom,
@@ -102,24 +110,24 @@ class CartNotifier extends ChangeNotifier {
   Future<void> sendCart(DateTime selectedDate) async {
     final String baseUrlVendres = "$serverDomaine/ventes";
     try {
-      await Future.forEach(_cart, (CartItem e) async {
+      await Future.forEach(_cart, (CartItem cartProduct) async {
         final res = await http.post(
           Uri.parse(baseUrlVendres),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode({
-            "id": e.id,
-            "nom": e.nom,
-            "categories": e.categories,
-            "prixAchat": e.prixAchat,
-            "prixVente": e.prixVente,
-            "stocks": e.stocks,
-            "qty": e.quantity,
+            "id": cartProduct.id,
+            "nom": cartProduct.nom,
+            "categories": cartProduct.categories,
+            "prixAchat": cartProduct.prixAchat,
+            "prixVente": cartProduct.prixVente,
+            "stocks": cartProduct.stocks,
+            "qty": cartProduct.quantity,
             "timestamps": selectedDate.toIso8601String(),
           }),
         );
 
         if (res.statusCode == 200) {
-          await configStock(e);
+          await configStock(cartProduct);
           _cart.clear();
         } else {
           throw Exception("erreur");
@@ -131,13 +139,15 @@ class CartNotifier extends ChangeNotifier {
   }
 
 //mis a jour du stock des produits acheter
-  Future<void> configStock(CartItem item) async {
-    final res = await http.get(Uri.parse('$serverDomaine/produits/${item.id}'));
+  Future<void> configStock(CartItem productSelected) async {
+    final res = await http
+        .get(Uri.parse('$serverDomaine/produits/${productSelected.id}'));
     if (res.statusCode == 200) {
       final product = json.decode(res.body);
       final Map<String, dynamic> prod = product[0];
-      if (item.quantity > 0 && item.quantity <= prod['stocks']) {
-        prod['stocks'] -= item.quantity;
+      if (productSelected.quantity > 0 &&
+          productSelected.quantity <= prod['stocks']) {
+        prod['stocks'] -= productSelected.quantity;
         try {
           await http.put(
             Uri.parse('$serverDomaine/produits/newStock/${prod['id']}'),
@@ -148,7 +158,7 @@ class CartNotifier extends ChangeNotifier {
           throw Exception(err);
         }
       } else {
-        print('Stock insuffisant pour le produit ${item.nom}');
+        print('Stock insuffisant pour le produit ${productSelected.nom}');
       }
     } else {
       throw Exception("Erreur de chargements");
@@ -156,27 +166,33 @@ class CartNotifier extends ChangeNotifier {
   }
 
 //mis a jour de stock des produit retourner
-  Future<void> cancelStocks(CartItem item) async {
-    //final product = _products.firstWhere((e) => e["id"] == item.id);
-    final res = await http.get(Uri.parse('$serverDomaine/produits/${item.id}'));
-    if (res.statusCode == 200) {
-      final product = json.decode(res.body);
-      final Map<String, dynamic> prod = product[0];
-      if (item.quantity > 0 && item.quantity <= prod["stocks"] ||
-          item.quantity >= prod["stocks"]) {
-        prod["stocks"] += item.quantity;
-        
-        // Envoie de la mise à jour du stock à la base de données
-        try {
-          await http.put(
-            Uri.parse('$serverDomaine/produits/newStock/${prod['id']}'),
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode({"stocks": prod['stocks']}),
-          );
-        } catch (err) {
-          throw Exception(err);
+  Future<void> cancelStocks(Map<String, dynamic> productSelected) async {
+    try {
+      final res = await http
+          .get(Uri.parse('$serverDomaine/produits/${productSelected["id"]}'));
+      if (res.statusCode == 200) {
+        final product = json.decode(res.body);
+        final Map<String, dynamic> prod = product[0];
+
+        if (productSelected["quantity"] > 0 &&
+                productSelected["quantity"] <= prod["stocks"] ||
+            productSelected["quantity"] >= prod["stocks"]) {
+          prod["stocks"] += productSelected["quantity"];
+
+          // Envoie de la mise à jour du stock à la base de données
+          try {
+            await http.put(
+              Uri.parse('$serverDomaine/produits/newStock/${prod['id']}'),
+              headers: {"Content-Type": "application/json"},
+              body: jsonEncode({"stocks": prod['stocks']}),
+            );
+          } catch (err) {
+            throw Exception(err);
+          }
         }
       }
+    } catch (err) {
+      throw Exception("Erreur réseau: $err");
     }
   }
 

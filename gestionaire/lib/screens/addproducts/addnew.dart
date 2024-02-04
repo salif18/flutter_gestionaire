@@ -208,9 +208,8 @@ class _AddNewProductsState extends State<AddNewProducts> {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text("Envoi en cours")));
-                            FocusScope.of(context)
-                                .requestFocus(FocusNode());
-                                //envoie vers base de donnee
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            //envoie vers base de donnee
                             productServiceApi.postProduct(data);
                           }
                         },

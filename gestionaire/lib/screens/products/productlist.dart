@@ -26,7 +26,6 @@ class _ProductListState extends State<ProductList> {
 
 //obtenir api getAllProducts dans la classe productServcices
   final ProductServiceApi productServiceApi = ProductServiceApi();
-  
 
   @override
   void initState() {
@@ -53,80 +52,118 @@ class _ProductListState extends State<ProductList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              StreamBuilder(
-                stream: productsStreamController.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 300.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Erreur: ${snapshot.error}');
-                  } else {
-                    final List products = snapshot.data;
-                    return Column(
-                      children: products.map((e) {
-                        return Container(
-                          height: 50,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                e["nom"].toUpperCase(),
-                                style: GoogleFonts.roboto(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                e["categories"],
-                                style: GoogleFonts.roboto(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                "${e["stocks"]}",
-                                style: GoogleFonts.roboto(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                "${e["prixVente"]}",
-                                style: GoogleFonts.roboto(
-                                    fontSize: 15, fontWeight: FontWeight.w500),
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      addTocart(e, 1);
-                                    },
-                                    icon: const Icon(Icons.monetization_on,
-                                        size: 30,
-                                        color:
-                                            Color.fromARGB(255, 243, 170, 11)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: StreamBuilder(
+                  stream: productsStreamController.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 300.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Erreur: ${snapshot.error}');
+                    } else {
+                      final List products = snapshot.data;
+                      return Column(
+                       
+                        children: products.map((product) {
+                          return Container(
+                            height: 50,
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                             
+                              children: [
+                                SizedBox(
+                                  width: 265,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 170,
+                                        child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children:[ 
+                                            Text(
+                                        product["nom"].toUpperCase(),
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      
+                                      Text(
+                                        product["categories"],
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                          ]
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      SizedBox(
+                                        width: 70,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children:[ 
+                                             Text(
+                                        "${product["stocks"]}",
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        "${product["prixVente"]}",
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                          ]
+                                        ),
+                                      )
+                                     
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _showEditProductsModal(context);
-                                    },
-                                    icon: const Icon(Icons.edit,
-                                        size: 30, color: Colors.greenAccent),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  }
-                },
+                                ),
+                                const SizedBox(width: 10,),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        addTocart(product, 1);
+                                      },
+                                      icon: const Icon(Icons.monetization_on,
+                                          size: 30,
+                                          color: Color.fromARGB(
+                                              255, 243, 170, 11)),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _showEditProductsModal(context);
+                                      },
+                                      icon: const Icon(Icons.edit,
+                                          size: 30, color: Colors.greenAccent),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                  },
+                ),
               ),
             ],
           ),
