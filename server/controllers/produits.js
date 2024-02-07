@@ -129,3 +129,150 @@ exports.getAllProduits = async (req, res) => {
       return res.status(500).json({ error: err.message });
     }
   };
+
+  //Version en laravel
+//   <?php
+
+// namespace App\Http\Controllers;
+
+// use App\Models\Produit;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Validator;
+
+// class ProduitController extends Controller
+// {
+//     // Ajouter un nouveau produit
+//     public function insertProduits(Request $request)
+//     {
+//         // Récupérer les données de la requête
+//         $data = $request->only(['nom', 'categories', 'prixAchat', 'prixVente', 'stocks', 'dateAchat']);
+
+//         try {
+//             // Valider les données de la requête
+//             $validator = Validator::make($data, [
+//                 'nom' => 'required|string',
+//                 'categories' => 'required|string',
+//                 'prixAchat' => 'required|numeric',
+//                 'prixVente' => 'required|numeric',
+//                 'stocks' => 'required|integer',
+//                 'dateAchat' => 'required|date',
+//             ]);
+
+//             // Si la validation échoue, renvoyer une réponse avec les erreurs
+//             if ($validator->fails()) {
+//                 return response()->json(['errors' => $validator->errors()], 400);
+//             }
+
+//             // Créer un nouveau produit avec les données de la requête
+//             $produit = Produit::create($data);
+
+//             // Retourner une réponse JSON indiquant que le produit a été ajouté avec succès
+//             return response()->json(['message' => 'Produit ajouté avec succès !!'], 201);
+//         } catch (\Exception $err) {
+//             // En cas d'erreur, retourner une réponse avec le message d'erreur
+//             return response()->json(['error' => $err->getMessage()], 500);
+//         }
+//     }
+
+//     // Obtenir tous les produits
+//     public function getAllProduits()
+//     {
+//         try {
+//             // Récupérer tous les produits ordonnés par dateAchat DESC
+//             $produits = Produit::orderBy('dateAchat', 'DESC')->get();
+
+//             // Retourner une réponse JSON contenant tous les produits
+//             return response()->json($produits, 200);
+//         } catch (\Exception $err) {
+//             // En cas d'erreur, retourner une réponse avec le message d'erreur
+//             return response()->json(['error' => $err->getMessage()], 500);
+//         }
+//     }
+
+//     // Obtenir un seul produit par son ID
+//     public function getOneProduit($id)
+//     {
+//         try {
+//             // Rechercher le produit par son ID
+//             $produit = Produit::findOrFail($id);
+
+//             // Retourner une réponse JSON contenant le produit
+//             return response()->json($produit, 200);
+//         } catch (\Exception $err) {
+//             // En cas d'erreur, retourner une réponse avec le message d'erreur
+//             return response()->json(['error' => $err->getMessage()], 500);
+//         }
+//     }
+
+//     // Mettre à jour un produit
+//     public function updateProduit(Request $request, $id)
+//     {
+//         // Récupérer les données de la requête
+//         $data = $request->only(['nom', 'categories', 'prixAchat', 'prixVente', 'stocks']);
+
+//         try {
+//             // Valider les données de la requête
+//             $validator = Validator::make($data, [
+//                 'nom' => 'required|string',
+//                 'categories' => 'required|string',
+//                 'prixAchat' => 'required|numeric',
+//                 'prixVente' => 'required|numeric',
+//                 'stocks' => 'required|integer',
+//             ]);
+
+//             // Si la validation échoue, renvoyer une réponse avec les erreurs
+//             if ($validator->fails()) {
+//                 return response()->json(['errors' => $validator->errors()], 400);
+//             }
+
+//             // Mettre à jour le produit
+//             Produit::where('id', $id)->update($data);
+
+//             // Retourner une réponse JSON indiquant que le produit a été modifié avec succès
+//             return response()->json(['message' => 'Produit modifié avec succès !!'], 200);
+//         } catch (\Exception $err) {
+//             // En cas d'erreur, retourner une réponse avec le message d'erreur
+//             return response()->json(['error' => $err->getMessage()], 500);
+//         }
+//     }
+
+//     // Mettre à jour un champ d'un produit
+//     public function updateField(Request $request, $id)
+//     {
+//         // Valider les données de la requête
+//         $validator = Validator::make($request->all(), [
+//             'stocks' => 'required|integer',
+//         ]);
+
+//         // Si la validation échoue, renvoyer une réponse avec les erreurs
+//         if ($validator->fails()) {
+//             return response()->json(['errors' => $validator->errors()], 400);
+//         }
+
+//         try {
+//             // Mettre à jour le champ stocks du produit
+//             Produit::where('id', $id)->update(['stocks' => $request->stocks]);
+
+//             // Retourner une réponse JSON indiquant que le champ a été mis à jour avec succès
+//             return response()->json(['message' => 'Champ mis à jour avec succès !!'], 200);
+//         } catch (\Exception $err) {
+//             // En cas d'erreur, retourner une réponse avec le message d'erreur
+//             return response()->json(['error' => $err->getMessage()], 500);
+//         }
+//     }
+
+//     // Supprimer un produit par son ID
+//     public function deleteProduit($id)
+//     {
+//         try {
+//             // Supprimer le produit par son ID
+//             Produit::findOrFail($id)->delete();
+
+//             // Retourner une réponse JSON indiquant que le produit a été supprimé avec succès
+//             return response()->json(['message' => 'Produit supprimé avec succès !!'], 200);
+//         } catch (\Exception $err) {
+//             // En cas d'erreur, retourner une réponse avec le message d'erreur
+//             return response()->json(['error' => $err->getMessage()], 500);
+//         }
+//     }
+// }

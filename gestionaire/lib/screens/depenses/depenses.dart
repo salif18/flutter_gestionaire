@@ -204,11 +204,11 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                           String formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
                           return Container(
-                            height: 90,
+                            height: 100,
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
+                                horizontal: 15, vertical: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: Colors.white,
@@ -220,9 +220,9 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      depense["motifs"],
+                                      depense["motifs"].toUpperCase(),
                                       style: GoogleFonts.roboto(
-                                        fontSize: 14,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -253,6 +253,7 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                                       icon: const Icon(
                                         Icons.delete_outline_rounded,
                                         size: 33,
+                                        color:Colors.purple
                                       ),
                                     )
                                   ],
