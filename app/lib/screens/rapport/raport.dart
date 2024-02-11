@@ -1,5 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
+import 'package:gestionaire/models/cartitem.dart';
+import 'package:gestionaire/models/productventes.dart';
 import 'package:http/http.dart' as http;
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
@@ -7,25 +12,6 @@ import 'package:gestionaire/api/venteservices.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-class ProductModel {
-  final int id ;
-  final String nom;
-  final String categories;
-  final int stocks;
-  final int prixVente;
-  final int qty;
-  final int prixAchat;
-
-  ProductModel({
-    required this.id,
-    required this.nom,
-    required this.categories,
-    required this.stocks,
-    required this.prixVente,
-    required this.qty,
-    required this.prixAchat,
-  });
-}
 
 class MyRapport extends StatefulWidget {
   const MyRapport({super.key});
@@ -36,16 +22,45 @@ class MyRapport extends StatefulWidget {
 
 class _MyRapportState extends State<MyRapport> {
   StreamController ventesStreamController = StreamController();
-  final VentesServicesApi ventesServicesApi = VentesServicesApi();
+  final VentesServicesApi api = VentesServicesApi();
   List ventesFilter = [];
 
   DateTime depenseDate = DateTime.now();
   String formattedDate = "";
 
+  //get vente
+  Future<void> getVentes()async{
+    try{
+      final res = await api.getAllVentes();
+      if(res.statusCode == 200){
+        List <dynamic> body = json.decode(res.body);
+        // List <ProductVenduModel> ventes = body.map((json) => ProductVenduModel.fromJson(json)).toList();
+        ventesStreamController.add(body);
+      } 
+
+       _showSnackBarError(context, "Erreur");
+    }catch(err){
+     _showSnackBarError(context, "Erreur");
+    }
+  }
+
+   void _showSnackBarError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          action: SnackBarAction(
+              label: "Close",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              })),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    ventesServicesApi.getAllVentes(ventesStreamController);
+    getVentes();
     
   }
 

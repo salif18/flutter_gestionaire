@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gestionaire/context/cartprovider.dart';
+import 'package:gestionaire/models/cartitem.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:date_field/date_field.dart';
 
 class VendreActionCart extends StatefulWidget {
-  const VendreActionCart({Key? key}) : super(key: key);
+  const VendreActionCart({super.key}) ;
 
   @override
   // ignore: library_private_types_in_public_api

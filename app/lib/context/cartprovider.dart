@@ -1,3 +1,5 @@
+import 'package:gestionaire/models/cartitem.dart';
+import 'package:gestionaire/models/products.dart';
 import 'package:http/http.dart' as http;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -6,20 +8,6 @@ import 'dart:convert';
 
 //domaine de server
 String serverDomaine = "http://10.0.2.2:3000";
-
-class CartItem {
-  int id;
-  String nom;
-  String categories;
-  int quantity;
-  int prixAchat;
-  int prixVente;
-  int stocks;
-  int somme;
-
-  CartItem(this.id, this.nom, this.categories, this.quantity, this.prixAchat,
-      this.prixVente, this.stocks, this.somme);
-}
 
 class CartNotifier extends ChangeNotifier {
   int _total;
@@ -31,23 +19,24 @@ class CartNotifier extends ChangeNotifier {
         _total = 0;
 
 //ajouter produit dans lae panier
-  void addTocart(Map<String, dynamic> productSelected, int qty) {
+  void addTocart(Products productSelected, int qty) {
     final existeItem = _cart.isNotEmpty
-        ? _cart.firstWhereOrNull(
-            (lastItem) => lastItem.id == productSelected["id"])
+        ? _cart
+            .firstWhereOrNull((lastItem) => lastItem.id == productSelected.id)
         : null;
     if (existeItem != null) {
       existeItem.quantity += qty;
     } else {
       _cart.add(CartItem(
-          productSelected["id"],
-          productSelected["nom"],
-          productSelected["categories"],
-          qty,
-          productSelected["prixAchat"],
-          productSelected["prixVente"],
-          productSelected["stocks"],
-          2000));
+          id: productSelected.id,
+          nom: productSelected.nom,
+          categories: productSelected.categories,
+          quantity: qty,
+          prixAchat: productSelected.prixAchat,
+          prixVente: productSelected.prixVente,
+          stocks: productSelected.stocks,
+          )
+      );
     }
     qty = 0;
     notifyListeners();
@@ -62,19 +51,24 @@ class CartNotifier extends ChangeNotifier {
 //incrementer produit dans le panier
   void increment(CartItem productSelected) {
     if (productSelected.quantity > 0) {
-      _cart = _cart
-          .map((lastItem) => lastItem.id == productSelected.id
-              ? CartItem(
-                  lastItem.id,
-                  lastItem.nom,
-                  lastItem.categories,
-                  lastItem.quantity + 1,
-                  lastItem.prixAchat,
-                  lastItem.prixVente,
-                  lastItem.stocks,
-                  lastItem.somme)
-              : lastItem)
-          .toList();
+      _cart = _cart.map((item) {
+        if (item.id == productSelected.id) {
+          // Mettre à jour la quantité du produit sélectionné
+          return CartItem(
+              id: item.id,
+              nom: item.nom,
+              categories: item.categories,
+              quantity: item.quantity + 1,
+              prixAchat: item.prixAchat,
+              prixVente: item.prixVente,
+              stocks: item.stocks,
+              );
+        } else {
+          // Renvoyer l'élément inchangé
+          return item;
+        }
+      }).toList();
+
       notifyListeners();
     }
   }
@@ -82,19 +76,24 @@ class CartNotifier extends ChangeNotifier {
 //decrementer produit de panier
   void decrement(CartItem productSelected) {
     if (productSelected.quantity > 0) {
-      _cart = _cart
-          .map((lastItem) => lastItem.id == productSelected.id
-              ? CartItem(
-                  lastItem.id,
-                  lastItem.nom,
-                  lastItem.categories,
-                  lastItem.quantity - 1,
-                  lastItem.prixAchat,
-                  lastItem.prixVente,
-                  lastItem.stocks,
-                  lastItem.somme)
-              : lastItem)
-          .toList();
+      _cart = _cart.map((item) {
+        if (item.id == productSelected.id) {
+          // Mettre à jour la quantité du produit sélectionné
+          return CartItem(
+              id: item.id,
+              nom: item.nom,
+              categories: item.categories,
+              quantity: item.quantity - 1,
+              prixAchat: item.prixAchat,
+              prixVente: item.prixVente,
+              stocks: item.stocks,
+              );
+        } else {
+          // Renvoyer l'élément inchangé
+          return item;
+        }
+      }).toList();
+
       notifyListeners();
     }
   }
@@ -166,18 +165,18 @@ class CartNotifier extends ChangeNotifier {
   }
 
 //mis a jour de stock des produit retourner
-  Future<void> cancelStocks(Map<String, dynamic> productSelected) async {
+  Future<void> cancelStocks(CartItem productSelected) async {
     try {
       final res = await http
-          .get(Uri.parse('$serverDomaine/produits/${productSelected["id"]}'));
+          .get(Uri.parse('$serverDomaine/produits/${productSelected.id}'));
       if (res.statusCode == 200) {
         final product = json.decode(res.body);
         final Map<String, dynamic> prod = product[0];
 
-        if (productSelected["quantity"] > 0 &&
-                productSelected["quantity"] <= prod["stocks"] ||
-            productSelected["quantity"] >= prod["stocks"]) {
-          prod["stocks"] += productSelected["quantity"];
+        if (productSelected.quantity > 0 &&
+                productSelected.quantity <= prod["stocks"] ||
+            productSelected.quantity >= prod["stocks"]) {
+          prod["stocks"] += productSelected.quantity;
 
           // Envoie de la mise à jour du stock à la base de données
           try {

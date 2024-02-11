@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gestionaire/context/cartprovider.dart';
+import 'package:gestionaire/models/cartitem.dart';
+import 'package:gestionaire/models/products.dart';
 import 'package:gestionaire/screens/addproducts/addnew.dart';
 import 'package:gestionaire/screens/addproducts/editproduct.dart';
 import 'package:gestionaire/screens/products/widgets/product_appbar.dart';
@@ -25,12 +30,28 @@ class _ProductListState extends State<ProductList> {
   StreamController productsStreamController = StreamController();
 
 //obtenir api getAllProducts dans la classe productServcices
-  final ProductServiceApi productServiceApi = ProductServiceApi();
+  final ProductServiceApi api = ProductServiceApi();
+
+  //obtenir
+  Future<void> getProducts()async{
+    try{
+        final res = await api.getAllProducts();
+        if(res.statusCode == 200){
+          List<dynamic> body = json.decode(res.body);
+          List <Products> products = body.map((json)=> Products.fromJson(json)).toList();
+          productsStreamController.add(products) ;
+        }else{
+          _showSnackBarError(context, "Erreur");
+        }
+    }catch(err){
+      _showSnackBarError(context, "Erreur");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    productServiceApi.getAllProducts(productsStreamController);
+    getProducts();
   }
 
   @override
@@ -38,10 +59,23 @@ class _ProductListState extends State<ProductList> {
     super.dispose();
   }
 
+  void _showSnackBarError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          action: SnackBarAction(
+              label: "Close",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              })),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<CartNotifier>(context);
-    void Function(Map<String, dynamic>, int) addTocart = cartData.addTocart;
+    void Function(Products, int) addTocart = cartData.addTocart;
     List<CartItem> cart = cartData.cart;
     return Scaffold(
       appBar: ProductAppBar(drawerKey: _drawerKey),
@@ -95,14 +129,14 @@ class _ProductListState extends State<ProductList> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children:[ 
                                             Text(
-                                        product["nom"].toUpperCase(),
+                                        product.nom.toUpperCase(),
                                         style: GoogleFonts.roboto(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600),
                                       ),
                                       
                                       Text(
-                                        product["categories"],
+                                        product.categories,
                                         style: GoogleFonts.roboto(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500),
@@ -117,13 +151,13 @@ class _ProductListState extends State<ProductList> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children:[ 
                                              Text(
-                                        "${product["stocks"]}",
+                                        "${product.stocks}",
                                         style: GoogleFonts.roboto(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500),
                                       ),
                                       Text(
-                                        "${product["prixVente"]}",
+                                        "${product.prixVente}",
                                         style: GoogleFonts.roboto(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500),

@@ -1,8 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gestionaire/api/venteservices.dart';
 import 'package:gestionaire/context/cartprovider.dart';
+import 'package:gestionaire/models/cartitem.dart';
+import 'package:gestionaire/models/products.dart';
+import 'package:gestionaire/models/productventes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +24,42 @@ class _ProductVendusState extends State<ProductVendus> {
   //tableau de stock des donnee recuperer
   StreamController ventesStreamController = StreamController();
   //appell de la fonction get vente depuis la class 
-  final VentesServicesApi ventesServicesApi = VentesServicesApi();
+  final VentesServicesApi api = VentesServicesApi();
 
+
+  //get vente
+  Future<void> getVentes()async{
+    try{
+      final res = await api.getAllVentes();
+      if(res.statusCode == 200){
+        List <dynamic> body = json.decode(res.body);
+        // List <ProductVenduModel> products = body.map((json)=> ProductVenduModel.fromJson(json)).toList();
+        ventesStreamController.add(body);
+      } else{
+        _showSnackBarError(context, "Erreur");
+      }
+    }catch(err){
+        _showSnackBarError(context, "Erreur");
+    }
+  }
+
+ void _showSnackBarError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          action: SnackBarAction(
+              label: "Close",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              })),
+    );
+  }
+  
   @override
   void initState() {
     super.initState();
-    ventesServicesApi.getAllVentes(ventesStreamController);
+    getVentes();
   }
 
   @override
@@ -34,7 +70,7 @@ class _ProductVendusState extends State<ProductVendus> {
   @override
   Widget build(BuildContext context) {
     final cartData = Provider.of<CartNotifier>(context);
-    void Function(Map<String, dynamic> item) cancelStocks =
+    void Function(CartItem item) cancelStocks =
         cartData.cancelStocks;
     return Scaffold(
       appBar: AppBar(
@@ -124,7 +160,7 @@ class _ProductVendusState extends State<ProductVendus> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  ventesServicesApi.removeVentes(
+                                  api.removeVentes(
                                       product, cancelStocks);
                                 },
                                 icon: const Icon(

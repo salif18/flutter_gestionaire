@@ -1,19 +1,23 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
 import 'package:gestionaire/api/depenserservices.dart';
+import 'package:gestionaire/models/depenses.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class DepensesWidgets extends StatefulWidget {
-  const DepensesWidgets({Key? key}) : super(key: key);
+  const DepensesWidgets({super.key});
 
   @override
   State<DepensesWidgets> createState() => _DepensesWidgetsState();
 }
 
 class _DepensesWidgetsState extends State<DepensesWidgets> {
-  DepensesServicesApi depensesServicesApi = DepensesServicesApi();
+  DepensesServicesApi api = DepensesServicesApi();
   StreamController depensesStreamController = StreamController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -21,16 +25,84 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
   final TextEditingController _depenseMontant = TextEditingController();
   DateTime depenseDate = DateTime.now();
 
+  //get depenses
+  Future<void> getDepenses() async {
+    try {
+      final res = await api.getAllDepenses();
+      List<dynamic> body = json.decode(res.body);
+      if (res.statusCode == 200) {
+        // List<Depenses> depenses = body.map((json) => Depenses.formJson(json)).toList();
+        depensesStreamController.add(body);
+      } else {
+        _showSnackBarError(context, "Erreur");
+      }
+    } catch (err) {
+      _showSnackBarError(context, "Erreur de serveur");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    depensesServicesApi.getAllDepenses(depensesStreamController);
+    getDepenses();
   }
 
   @override
   void dispose() {
     super.dispose();
     depensesStreamController.close();
+  }
+
+  _postDepenseToServer() async {
+    if (_formKey.currentState!.validate()) {
+      Map<String, dynamic> data = {
+        "montants": _depenseMontant.text,
+        "motifs": _depenseTypes.text,
+        "dateAchat": depenseDate.toIso8601String(),
+      };
+      try{
+        final res = await api.postDepenses(data);
+        var body = json.decode(res.body);
+        if(res.statusCode == 201){
+          _showSnackBarSuccess(context, body.message);
+        }else{
+          _showSnackBarError(context, body.message);
+        }
+      }catch(err){
+          _showSnackBarError(context, "Erreur");
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Envoi en cours")),
+      );
+      FocusScope.of(context).requestFocus(FocusNode());
+      
+    }
+  }
+
+  void _showSnackBarSuccess(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(message),
+          backgroundColor: const Color.fromARGB(255, 54, 244, 86),
+          action: SnackBarAction(
+              label: "Close",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              })),
+    );
+  }
+
+  void _showSnackBarError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          action: SnackBarAction(
+              label: "Close",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              })),
+    );
   }
 
   void _showAddDepense(BuildContext context) {
@@ -128,20 +200,7 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                       minimumSize: const Size(300, 50),
                       backgroundColor: const Color.fromARGB(255, 226, 173, 15),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Map<String, dynamic> data = {
-                          "montants": _depenseMontant.text,
-                          "motifs": _depenseTypes.text,
-                          "dateAchat": depenseDate.toIso8601String(),
-                        };
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Envoi en cours")),
-                        );
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        depensesServicesApi.postDepenses(data);
-                      }
-                    },
+                    onPressed: _postDepenseToServer,
                     icon: const Icon(Icons.save_alt,
                         size: 33, color: Colors.white),
                     label: Text(
@@ -201,7 +260,8 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                       return Column(
                         children: depenses.map((depense) {
                           DateTime date = DateTime.parse(depense["timestamps"]);
-                          String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(date);
 
                           return Container(
                             height: 100,
@@ -248,13 +308,12 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        depensesServicesApi.removeDepenses(depense);
+                                        api.removeDepenses(depense);
                                       },
                                       icon: const Icon(
-                                        Icons.delete_outline_rounded,
-                                        size: 33,
-                                        color:Colors.purple
-                                      ),
+                                          Icons.delete_outline_rounded,
+                                          size: 33,
+                                          color: Colors.purple),
                                     )
                                   ],
                                 )
@@ -271,7 +330,6 @@ class _DepensesWidgetsState extends State<DepensesWidgets> {
           ),
         ),
       ),
-      
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

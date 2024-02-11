@@ -11,22 +11,11 @@ String ventesUrl = "$serverDomaine$ventesApi";
 class VentesServicesApi {
 
 //obtenir les produits
-  Future getAllVentes(ventesStreamController) async {
-    try {
-      final response = await http.get(
+ getAllVentes() async {
+      return await http.get(
         Uri.parse(ventesUrl),
         headers: {"Content-Type": "application/json"},
       );
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        //mettre les donnees de la requette recu dans ce tableau
-        ventesStreamController.add(data);
-      } else {
-        return "Erreur de chargement";
-      }
-    } catch (err) {
-      throw Exception("Erreur réseau: $err");
-    }
   }
 
 //obtenir un produit
